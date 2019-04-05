@@ -174,7 +174,7 @@ void cpu_run(struct cpu *cpu)
     unsigned char operandB = cpu_ram_read(cpu, cpu->pc + 2);
     // 2. Figure out how many operands this next instruction requires
     // trace
-    printf("TRACE: cpu: %02X, register: %02X, opA: %02X, opB: %02X\n", cpu->pc, IR, operandA, operandB);
+    printf("TRACE: cpu: %02X, instruction register: %02X, opA: %02X, opB: %02X\n", cpu->pc, IR, operandA, operandB);
     // switch statement for Instruction register
     switch (IR)
     {
@@ -240,6 +240,28 @@ void cpu_run(struct cpu *cpu)
     // case return
     case RET:
       cpu->pc = cpu_pop(cpu);
+      break;
+    // case compare
+    case CMP:
+      alu(cpu, ALU_CMP, operandA, operandB);
+      break;
+    // case jump jump to address stored in given register, set pc to address stored in given register
+    case JMP:
+      cpu->pc = cpu->registers[operandA];
+      break;
+    // case jeq, if equal flag is true, jump address stored in given register
+    case JEQ:
+      if (cpu->fl == 1)
+      {
+        cpu->pc = cpu->registers[operandA];
+      }
+      break;
+    // case jne, if equal flag is not true (false), jump address stored in given register
+    case JNE:
+      if (cpu->fl != 1)
+      {
+        cpu->pc = cpu->registers[operandA];
+      }
       break;
     // default case
     default:
