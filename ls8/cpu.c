@@ -131,7 +131,24 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
   case ALU_ADD:
     cpu->registers[regA] += cpu->registers[regB];
     break;
-
+  // fl bits: 00000LGE, equal 00000001 =1, lessthan 00000100 =4, greaterthan 00000010 =2
+  case ALU_CMP:
+    // equal
+    if (cpu->registers[regA] == cpu->registers[regB])
+    {
+      cpu->fl = 1;
+    }
+    //les than
+    else if (cpu->registers[regA] < cpu->registers[regB])
+    {
+      cpu->fl = 4;
+    }
+    // greater than
+    else if (cpu->registers[regA] > cpu->registers[regB])
+    {
+      cpu->fl = 2;
+    }
+    break;
     // TODO: implement more ALU ops
   }
 }
