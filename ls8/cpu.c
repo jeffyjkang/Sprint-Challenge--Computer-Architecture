@@ -244,6 +244,7 @@ void cpu_run(struct cpu *cpu)
     // case compare
     case CMP:
       alu(cpu, ALU_CMP, operandA, operandB);
+      cpu->pc += 3;
       break;
     // case jump jump to address stored in given register, set pc to address stored in given register
     case JMP:
@@ -255,12 +256,20 @@ void cpu_run(struct cpu *cpu)
       {
         cpu->pc = cpu->registers[operandA];
       }
+      else
+      {
+        cpu->pc += 2;
+      }
       break;
     // case jne, if equal flag is not true (false), jump address stored in given register
     case JNE:
       if (cpu->fl != 1)
       {
         cpu->pc = cpu->registers[operandA];
+      }
+      else
+      {
+        cpu->pc += 2;
       }
       break;
     // default case
